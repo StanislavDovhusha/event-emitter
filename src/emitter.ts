@@ -11,7 +11,7 @@ export abstract class Emitter<T> {
     }
   }
 
-  public removeAll(): void {
+  public unsubscribeAll(): void {
     this.observers.forEach((item) => item.unsubscribe());
   }
 

@@ -1,6 +1,6 @@
 {
   "name": "eonemitter",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "Minimal and type-safe event emitter with optional behavior support.",
   "main": "./dist/index.js",       
   "module": "./dist/index.mjs",      
