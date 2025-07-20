@@ -1,4 +1,5 @@
 src/
+tsup.config.сjs
 tsup.config.ts
 tsconfig.json
 vitest.config.ts
