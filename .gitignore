@@ -1,0 +1,31 @@
+# Node.js
+node_modules/
+dist/
+*.log
+.npm/
+
+# TypeScript
+*.tsbuildinfo
+
+# Test outputs
+coverage/
+vitest-*.log
+
+# VSCode/IDE/editor
+.vscode/
+.idea/
+*.sw?
+
+# Environment
+.env
+.env.*
+
+# MacOS & system files
+.DS_Store
+Thumbs.db
+
+# npm pack artifacts
+*.tgz
+
+# Optional: ignore local test files
+test-results/
