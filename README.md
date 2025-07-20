@@ -12,7 +12,7 @@ Minimal, type-safe, reactive event emitter for TypeScript and JavaScript.
 ## Installation
 
 ```bash
-npm install event-emitter
+npm install eonemitter
 ```
 
 ## Usage
@@ -30,16 +30,8 @@ npm install event-emitter
 
 ```typeScript
 subscribe(callback)
-```
-```typeScript
 subscribeOnce(callback)
-```
-```typeScript
 emit(value)
-```
-```typeScript
 removeAll()
-```
-```typeScript
 getValue() (only in BehaviorEventEmitter)
 ```
