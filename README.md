@@ -17,13 +17,13 @@ npm install eonemitter
 
 ## Usage
 ```typeScript
-    import { EventEmitter, BehaviorEventEmitter } from 'event-emitter';
+import { EventEmitter, BehaviorEventEmitter } from 'eonemitter';
 
-    const emitter = new EventEmitter<string>();
-    const sub = emitter.subscribe(value => console.log(value));
+const emitter = new EventEmitter<string>();
+const sub = emitter.subscribe(value => console.log(value));
 
-    emitter.emit('Hello!');
-    sub.unsubscribe();
+emitter.emit('Hello!');
+sub.unsubscribe();
 ```
 
 ## API
