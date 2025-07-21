@@ -1,6 +1,8 @@
-# Event Emitter
+# Eonemitter
 
 A minimal, fully-typed, and reactive event emitter for TypeScript and JavaScript.
+
+This lightweight utility provides a simple yet powerful mechanism for handling events in a reactive style. It offers a fully type-safe API, supports multiple listeners, and integrates cleanly with observable patterns without any external dependencies.
 
 ## ✅ Features
 
@@ -57,7 +59,11 @@ emitter.emit('Hi from CommonJS!');
 
 ```
 
-## API
+## 📚 API
+
+### EventEmitter
+
+EventEmitter - a generic event emitter that allows subscribing to and emitting events of type T. Supports multiple subscribers and provides control over subscription lifecycles.
 
 ```typeScript
 subscribe(callback: (value: T) => void): ISubscription
@@ -66,13 +72,46 @@ subscribe(callback: (value: T) => void): ISubscription
 subscribeOnce(callback: (value: T) => void): ISubscription
 // Subscribes to only the next event, then automatically unsubscribes
 
+asObservable(): IObservable<T> 
+// Returns a read-only observable interface to this emitter.
+
+hasSubscribers(): boolean
+// Returns true if there are any active subscribers.
+
 emit(value: T): void
 // Emits a new event to all current subscribers
 
 unsubscribeAll(): void
 // Removes all active subscribers
 
-getValue(): T
-// (Only available in BehaviorEventEmitter) Returns the most recent emitted value
+```
+### BehaviorEventEmitter
 
+BehaviorEventEmitter - extends EventEmitter by storing the most recent value. New subscribers will immediately receive the last emitted value upon subscribing.
+
+```typeScript
+getValue(): T
+// Returns the most recently emitted value.
+
+``` 
+
+### IObservable 
+
+IObservable - exposes a interface for subscribing to events 
+
+```typeScript
+subscribe(callback: (value: T) => void): ISubscription
+// Subscribes to all future events.
+
+subscribeOnce(callback: (value: T) => void): ISubscription
+// Subscribes to the next emitted event only, then automatically unsubscribes.
+```
+
+### ISubscription 
+
+ISubscription - represents a subscription to an event stream. Used to manually unsubscribe when needed.
+
+```typeScript
+  unsubscribe(): void; 
+  // Cancels the subscription.
 ```

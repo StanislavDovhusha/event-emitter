@@ -1,6 +1,6 @@
 {
   "name": "eonemitter",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "Minimal and type-safe event emitter with optional behavior support.",
   "main": "./dist/index.js",       
   "module": "./dist/index.mjs",      
@@ -29,7 +29,13 @@
     "signal",
     "observable",
     "typescript",
-    "reactive"
+    "reactive",
+    "event", 
+    "events",
+    "trigger",
+    "listener",
+    "pubsub",
+    "emitter"
   ],
   "author": "stanislav.dovhusha",
   "license": "MIT",
