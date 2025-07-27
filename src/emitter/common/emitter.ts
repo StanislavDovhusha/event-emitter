@@ -1,9 +1,14 @@
-import { IObservable, ISubscription } from "./common";
+import { ISubscription } from "../../common";
 import { InternalObserver } from "./internal-observer";
+import { Observable } from "./observer";
 
-export abstract class Emitter<T> {
+export abstract class Emitter<T> extends Observable<T> {
   private observers: InternalObserver<T>[] = [];
   private counter = 0;
+
+  constructor() {
+    super();
+  }
 
   public emit(value: T): void {
     for (const observer of this.observers) {
@@ -23,11 +28,8 @@ export abstract class Emitter<T> {
     return this.add(callback, true);
   }
 
-  public asObservable(): IObservable<T> {
-    return {
-      subscribe: this.subscribe.bind(this),
-      subscribeOnce: this.subscribeOnce.bind(this),
-    };
+  public asObservable(): Observable<T> {
+    return new Observable<T>(this);
   }
 
   public hasSubscribers(): boolean {

@@ -1,4 +1,4 @@
-import { ISubscription } from "./common";
+import { ISubscription } from "../../common";
 
 export class InternalObserver<T> {
   private readonly id: number;

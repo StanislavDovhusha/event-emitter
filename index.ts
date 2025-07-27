@@ -1,7 +1,8 @@
-import { BehaviorEventEmitter } from "behavior-event-emitter";
-import { EventEmitter } from "event-emitter";
-import { IObservable, ISubscription } from "common";
+import { BehaviorEventEmitter } from "./src/emitter/behavior-event-emitter";
+import { EventEmitter } from "./src/emitter/event-emitter";
+import { IObservable, ISubscription } from "./src/common";
+import { map } from "./src/operator/map";
 
-export default { EventEmitter, BehaviorEventEmitter };
+export default { EventEmitter, BehaviorEventEmitter, map };
 
-export { EventEmitter, BehaviorEventEmitter, IObservable, ISubscription };
+export { EventEmitter, BehaviorEventEmitter, IObservable, ISubscription, map };
