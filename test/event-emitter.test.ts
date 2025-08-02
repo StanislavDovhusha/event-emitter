@@ -1,5 +1,5 @@
 import { describe, it, expect, vi } from "vitest";
-import { EventEmitter } from "../index";
+import { EventEmitter, map } from "../index";
 
 describe("EventEmitter", () => {
   it("should emit values to subscribers", () => {
@@ -35,5 +35,23 @@ describe("EventEmitter", () => {
 
     expect(callback).toHaveBeenCalledTimes(1);
     expect(callback).toHaveBeenCalledWith(1);
+  });
+
+  it("should support pipe", () => {
+    const emitter = new EventEmitter<number>();
+
+    emitter.subscribe((value) => {
+      console.log("callback no pipe " + value);
+    });
+    emitter
+      .asObservable()
+      .pipe((x)=>"")
+      .pipe(map(x=> ""))
+      .subscribe((value) => {
+        console.log("callback pipe " + value);
+      });
+
+    emitter.emit(1);
+    emitter.emit(2);
   });
 });

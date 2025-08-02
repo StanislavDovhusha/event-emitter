@@ -1,13 +1,13 @@
-import { ISubscription } from "./common";
+import { ISubscription } from "../../common";
 
-export class InternalObserver<T> {
+export class InternalObserver {
   private readonly id: number;
-  private readonly callback: (value: T) => void;
+  private readonly callback: (value: any) => void;
   private readonly onUnsubscribe: (id: number) => void;
 
   constructor(
     id: number,
-    callback: (value: T) => void,
+    callback: (value: any) => void,
     onUnsubscribe: (id: number) => void
   ) {
     this.id = id;
@@ -19,7 +19,7 @@ export class InternalObserver<T> {
     return this.id;
   }
 
-  public execute(value: T) {
+  public execute(value: any) {
     this.callback(value);
   }
 

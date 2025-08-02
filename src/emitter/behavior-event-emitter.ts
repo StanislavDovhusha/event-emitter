@@ -1,5 +1,5 @@
 import { Emitter } from "./emitter";
-import { ISubscription } from "./common";
+import { ISubscription } from "../common";
 
 export class BehaviorEventEmitter<T> extends Emitter<T> {
   private value: T;

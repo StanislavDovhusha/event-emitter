@@ -1,8 +1,15 @@
-import { IObservable, ISubscription } from "./common";
-import { InternalObserver } from "./internal-observer";
+import {
+  IObservable,
+  ISubscriber,
+  ISubscription,
+  OperatorFunction,
+  // OperatorFunction,
+} from "../common";
+import { InternalObserver } from "./common/internal-observer";
+import { Observable } from "./common/observable";
 
-export abstract class Emitter<T> {
-  private observers: InternalObserver<T>[] = [];
+export abstract class Emitter<T> implements IObservable<T> {
+  private observers: InternalObserver[] = [];
   private counter = 0;
 
   public emit(value: T): void {
@@ -23,25 +30,26 @@ export abstract class Emitter<T> {
     return this.add(callback, true);
   }
 
-  public asObservable(): IObservable<T> {
-    return {
-      subscribe: this.subscribe.bind(this),
-      subscribeOnce: this.subscribeOnce.bind(this),
-    };
+  public asObservable(): Observable<T> {
+    return new Observable<T>(this);
+  }
+
+  public pipe<R>(operator: OperatorFunction<T, R>): IObservable<R> {
+    return operator(this);
   }
 
   public hasSubscribers(): boolean {
     return this.getObservers().length > 0;
   }
 
-  protected getObservers(): readonly InternalObserver<T>[] {
+  protected getObservers(): readonly InternalObserver[] {
     return this.observers;
   }
 
   private add(callback: (value: T) => void, once: boolean): ISubscription {
     const id = ++this.counter;
 
-    let observer!: InternalObserver<T>;
+    let observer!: InternalObserver;
 
     const wrappedCallback = once
       ? (value: T) => {
@@ -50,7 +58,7 @@ export abstract class Emitter<T> {
         }
       : callback;
 
-    observer = new InternalObserver<T>(id, wrappedCallback, (removeId) => {
+    observer = new InternalObserver(id, wrappedCallback, (removeId) => {
       this.observers = this.observers.filter((o) => o.getId() !== removeId);
     });
 
