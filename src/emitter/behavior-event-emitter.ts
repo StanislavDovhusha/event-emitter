@@ -24,6 +24,13 @@ export class BehaviorEventEmitter<T> extends Emitter<T> {
     return sub;
   }
 
+  /**
+   * Delivers the current value immediately if it is defined, otherwise waits
+   * for the next emitted value, then automatically unsubscribes.
+   *
+   * @deprecated Use `take(1)` instead, e.g.
+   * `emitter.asObservable().pipe(take(1)).subscribe(callback)`.
+   */
   public subscribeOnce(callback: (value: T) => void): ISubscription {
     const value = this.getValue();
     if (value !== undefined) {

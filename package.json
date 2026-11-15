@@ -37,6 +37,10 @@
     "pubsub",
     "emitter"
   ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/StanislavDovhusha/event-emitter.git"
+  },
   "author": "stanislav.dovhusha",
   "license": "MIT",
   "devDependencies": {

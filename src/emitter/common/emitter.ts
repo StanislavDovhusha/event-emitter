@@ -1,14 +1,10 @@
 import { ISubscription } from "../../common";
 import { InternalObserver } from "./internal-observer";
-import { Observable } from "./observer";
+import { Observable } from "./observable";
 
-export abstract class Emitter<T> extends Observable<T> {
+export abstract class Emitter<T> {
   private observers: InternalObserver<T>[] = [];
   private counter = 0;
-
-  constructor() {
-    super();
-  }
 
   public emit(value: T): void {
     for (const observer of this.observers) {
@@ -24,12 +20,25 @@ export abstract class Emitter<T> extends Observable<T> {
     return this.add(callback, false);
   }
 
+  /**
+   * Subscribes to the next value only, then automatically unsubscribes.
+   *
+   * @deprecated Use `take(1)` instead, e.g.
+   * `emitter.asObservable().pipe(take(1)).subscribe(callback)`.
+   */
   public subscribeOnce(callback: (value: T) => void): ISubscription {
     return this.add(callback, true);
   }
 
+  /**
+   * Returns a read-only view of this emitter that supports operators
+   * via `pipe()` (e.g. `filter`, `map`, `take`). It is still an `IObservable<T>`.
+   */
   public asObservable(): Observable<T> {
-    return new Observable<T>(this);
+    return new Observable<T>(
+      this.subscribe.bind(this),
+      this.subscribeOnce.bind(this)
+    );
   }
 
   public hasSubscribers(): boolean {

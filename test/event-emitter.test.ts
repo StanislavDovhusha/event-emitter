@@ -38,18 +38,27 @@ describe("EventEmitter", () => {
   });
 
   it("should support pipe", () => {
-    const emitter: EventEmitter<number> = new EventEmitter<number>();
-    const stream = emitter
-      .asObservable()
- 
-      .pipe(map((value) => (value*2).toString()))
-      // .pipe(map((value) => value * 2))
-      // .pipe(map((value) => (value * 2).toString()));
+    const emitter = new EventEmitter<number>();
+    const callback = vi.fn();
 
-    stream.subscribe((value) => {
-      console.log(value);
-    });
+    const stream: IObservable<string> = emitter
+      .asObservable()
+      .pipe(map((value) => (value * 2).toString()));
+
+    stream.subscribe(callback);
     emitter.emit(10);
     emitter.emit(5);
+
+    expect(callback.mock.calls).toEqual([["20"], ["10"]]);
+  });
+
+  it("pipe() without operators should return an equivalent stream", () => {
+    const emitter = new EventEmitter<number>();
+    const callback = vi.fn();
+
+    emitter.asObservable().pipe().subscribe(callback);
+    emitter.emit(1);
+
+    expect(callback).toHaveBeenCalledWith(1);
   });
 });

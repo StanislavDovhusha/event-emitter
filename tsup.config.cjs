@@ -1,6 +1,5 @@
-const { defineConfig } = require('tsup');
-
-module.exports = defineConfig([
+/** @type {import('tsup').Options[]} */
+module.exports = [
   {
     entry: ['index.ts'],
     format: ['esm', 'cjs'],
@@ -21,4 +20,4 @@ module.exports = defineConfig([
     sourcemap: false,
     outExtension: () => ({ js: '.mini.js' }),
   },
-]);
+];
