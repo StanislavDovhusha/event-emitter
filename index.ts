@@ -5,8 +5,17 @@ import { IObservable, ISubscription, OperatorFunction } from "./src/common";
 import { filter } from "./src/operator/filter";
 import { map } from "./src/operator/map";
 import { take } from "./src/operator/take";
+import { takeWhile } from "./src/operator/take-while";
 
-export default { EventEmitter, BehaviorEventEmitter, Observable, filter, map, take };
+export default {
+  EventEmitter,
+  BehaviorEventEmitter,
+  Observable,
+  filter,
+  map,
+  take,
+  takeWhile,
+};
 
 export {
   EventEmitter,
@@ -18,4 +27,5 @@ export {
   filter,
   map,
   take,
+  takeWhile,
 };

@@ -10,7 +10,7 @@ This lightweight utility provides a simple yet powerful mechanism for handling e
 
 - ✅ `EventEmitter` – basic event system for emitting and listening to events
 - ✅ `BehaviorEventEmitter` – like `BehaviorSubject`,  emits the last value to new subscribers 
-- ✅ RxJS-like operators – `filter`, `map`, `take` via `pipe()`
+- ✅ RxJS-like operators – `filter`, `map`, `take`, `takeWhile` via `pipe()`
 - ✅ Fully typed and lightweight
 
 ## 📦 Installation
@@ -167,11 +167,24 @@ take(count: number): OperatorFunction<T, T>
 // Emits at most `count` values, then automatically unsubscribes from the source.
 // take(0) and negative counts emit nothing; non-integer counts are rounded down;
 // a non-number or NaN count throws a TypeError.
+
+takeWhile(predicate: (value: T, index: number) => boolean, inclusive?: boolean): OperatorFunction<T, T>
+// Emits values while predicate returns true. On the first value for which it returns false,
+// automatically unsubscribes from the source. That value is not emitted unless inclusive is true.
+```
+
+```typeScript
+emitter
+  .asObservable()
+  .pipe(takeWhile((value) => value < 3))
+  .subscribe((value) => console.log(value));
+
+[1, 2, 3, 1].forEach((v) => emitter.emit(v)); // Logs: 1, 2
 ```
 
 - `index` is the zero-based position of the source value, counted per subscription.
 - Errors thrown by `predicate` / `project` propagate to the caller of `emit()`, exactly like errors thrown by a regular subscriber.
-- Each `subscribe()` on a derived stream creates exactly one subscription on the source emitter; unsubscribing (or `take` completing) removes it.
+- Each `subscribe()` on a derived stream creates exactly one subscription on the source emitter; unsubscribing (or `take` / `takeWhile` completing) removes it.
 
 ### ISubscription 
 

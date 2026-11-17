@@ -3,28 +3,23 @@ import { ISubscription } from "../../common";
 type SubscribeFn<T> = (callback: (value: T) => void) => ISubscription;
 
 /**
- * Subscribes via `subscribe` and forwards at most `count` values to
- * `callback`, then releases the upstream subscription.
+ * Subscribes via `subscribe` and passes every value to `next` together with
+ * a `close` function that ends the subscription early (completion).
  *
  * Guarantees:
- * - `callback` is never invoked more than `count` times, even on re-entrant
- *   emits made from inside `callback`.
- * - The upstream subscription is released before the last value is
- *   delivered, so it is released even if `callback` throws.
+ * - After `close()` no further values reach `next`, even on re-entrant emits
+ *   made from inside `next`.
+ * - `close()` releases the upstream subscription immediately, so calling it
+ *   before delivering the last value releases the source even if the
+ *   subscriber throws.
  * - Sources that deliver synchronously while subscribing (for example
  *   `BehaviorEventEmitter`) are released right after `subscribe` returns.
- * - `count <= 0` never subscribes to the source at all.
+ * - The returned subscription's `unsubscribe` is idempotent.
  */
-export function subscribeWithLimit<T>(
+export function subscribeClosable<T>(
   subscribe: SubscribeFn<T>,
-  count: number,
-  callback: (value: T) => void
+  next: (value: T, close: () => void) => void
 ): ISubscription {
-  if (!(count > 0)) {
-    return { unsubscribe: () => {} };
-  }
-
-  let seen = 0;
   let closed = false;
   let upstream: ISubscription | undefined;
 
@@ -40,22 +35,41 @@ export function subscribeWithLimit<T>(
   };
 
   const subscription = subscribe((value: T) => {
-    if (closed) {
-      return;
+    if (!closed) {
+      next(value, close);
     }
-    seen++;
-    if (seen >= count) {
-      close();
-    }
-    callback(value);
   });
 
   if (closed) {
-    // The limit was reached synchronously during subscribe().
+    // Completed synchronously during subscribe().
     subscription.unsubscribe();
   } else {
     upstream = subscription;
   }
 
   return { unsubscribe: close };
+}
+
+/**
+ * Subscribes via `subscribe` and forwards at most `count` values to
+ * `callback`, then releases the upstream subscription.
+ * `count <= 0` never subscribes to the source at all.
+ */
+export function subscribeWithLimit<T>(
+  subscribe: SubscribeFn<T>,
+  count: number,
+  callback: (value: T) => void
+): ISubscription {
+  if (!(count > 0)) {
+    return { unsubscribe: () => {} };
+  }
+
+  let seen = 0;
+  return subscribeClosable<T>(subscribe, (value, close) => {
+    seen++;
+    if (seen >= count) {
+      close();
+    }
+    callback(value);
+  });
 }

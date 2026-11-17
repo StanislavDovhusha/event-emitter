@@ -164,6 +164,22 @@ declare function map<T, R>(
  */
 declare function take<T>(count: number): OperatorFunction<T, T>;
 
+/**
+ * Emits source values while `predicate` returns `true`. On the first value
+ * for which it returns `false`, automatically unsubscribes from the source;
+ * that value is not delivered unless `inclusive` is `true`.
+ * `index` is the zero-based number of the source value, per subscription.
+ * Errors thrown by `predicate` propagate to the caller of `emit()`.
+ */
+declare function takeWhile<T, S extends T>(
+  predicate: (value: T, index: number) => value is S,
+  inclusive?: false
+): OperatorFunction<T, S>;
+declare function takeWhile<T>(
+  predicate: (value: T, index: number) => boolean,
+  inclusive?: boolean
+): OperatorFunction<T, T>;
+
 declare const _default: {
   EventEmitter: typeof EventEmitter;
   BehaviorEventEmitter: typeof BehaviorEventEmitter;
@@ -171,6 +187,7 @@ declare const _default: {
   filter: typeof filter;
   map: typeof map;
   take: typeof take;
+  takeWhile: typeof takeWhile;
 };
 
 export {
@@ -180,6 +197,7 @@ export {
   filter,
   map,
   take,
+  takeWhile,
   type IObservable,
   type ISubscription,
   type OperatorFunction,

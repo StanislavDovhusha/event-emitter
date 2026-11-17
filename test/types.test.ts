@@ -122,13 +122,16 @@ describe.each(targets)("type-level API checks: %s", (_, mod) => {
 
   it("operators infer types through pipe", () => {
     const { errors } = analyze(`
-      import { EventEmitter, Observable, OperatorFunction, filter, map, take } from "${mod}";
+      import { EventEmitter, Observable, OperatorFunction, filter, map, take, takeWhile } from "${mod}";
       const e = new EventEmitter<number>();
 
       const a: Observable<string> = e.asObservable().pipe(filter((v) => v > 1), map((v) => v.toFixed(1)), take(2));
       const b: Observable<boolean> = e.asObservable().pipe(filter((v) => v > 5), map((v) => v * 2), take(3), map((v) => v > 10));
       const c: Observable<number> = new EventEmitter<string | number>().asObservable().pipe(filter((v): v is number => typeof v === "number"));
       const op: OperatorFunction<number, string> = map((v: number) => String(v));
+      const d: Observable<number> = e.asObservable().pipe(takeWhile((v, i) => v < 10 && i < 5));
+      const f: Observable<number> = e.asObservable().pipe(takeWhile((v) => v < 10, true));
+      const g: Observable<number> = new EventEmitter<string | number>().asObservable().pipe(takeWhile((v): v is number => typeof v === "number"));
     `);
     expect(errors).toEqual([]);
   });
@@ -177,7 +180,7 @@ describe("shipped typings", () => {
 
     expect(declared).toEqual(runtimeNames);
     expect(Object.keys(runtime.default).sort()).toEqual(
-      ["BehaviorEventEmitter", "EventEmitter", "Observable", "filter", "map", "take"]
+      ["BehaviorEventEmitter", "EventEmitter", "Observable", "filter", "map", "take", "takeWhile"]
     );
   });
 });
